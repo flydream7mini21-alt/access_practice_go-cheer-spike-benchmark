@@ -1,0 +1,25 @@
+{
+  "environment": {
+    "os": "Windows (Docker Desktop)",
+    "backend": "Go (Gin)",
+    "target": "talent_a",
+    "requests": 200,
+    "concurrency": 20
+  },
+  "records": [
+    {
+      "timestamp": "11:29:44",
+      "mode": "optimized",
+      "requests": 200,
+      "elapsedMs": 295,
+      "rps": 678.0
+    },
+    {
+      "timestamp": "",
+      "mode": "naive",
+      "requests": 200,
+      "elapsedMs": null,
+      "rps": null
+    }
+  ]
+}

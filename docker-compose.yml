@@ -1,0 +1,68 @@
+services:
+  api-optimized:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - MODE=optimized
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=cheer_user
+      - DB_PASSWORD=cheer_pass
+      - DB_NAME=cheer_db
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  api-naive:
+    build: .
+    ports:
+      - "8081:8080"
+    environment:
+      - MODE=naive
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=cheer_user
+      - DB_PASSWORD=cheer_pass
+      - DB_NAME=cheer_db
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_USER=cheer_user
+      - POSTGRES_PASSWORD=cheer_pass
+      - POSTGRES_DB=cheer_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cheer_user -d cheer_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  redisdata:
